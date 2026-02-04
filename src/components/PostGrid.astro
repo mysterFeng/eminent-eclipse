@@ -1,0 +1,21 @@
+---
+const { posts, showHeader = true } = Astro.props;
+---
+<section class="post-grid" id="posts">
+  {showHeader && (
+    <header class="section-head">
+      <h3>文章列表</h3>
+      <a class="btn btn-ghost" href="/posts">查看归档</a>
+    </header>
+  )}
+  <div class="grid">
+    {posts.map((post) => (
+      <a class="card" href={post.href}>
+        <div class="card-tag">{post.tags[0]}</div>
+        <h4>{post.title}</h4>
+        <p>{post.summary ?? post.description}</p>
+        <div class="meta">{post.readingTime} · {post.date} · {post.author}</div>
+      </a>
+    ))}
+  </div>
+</section>

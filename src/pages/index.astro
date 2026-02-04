@@ -1,17 +1,43 @@
 ---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import Hero from "../components/Hero.astro";
+import FeaturedSection from "../components/FeaturedSection.astro";
+import Topics from "../components/Topics.astro";
+import PostGrid from "../components/PostGrid.astro";
+import Newsletter from "../components/Newsletter.astro";
+import { getCollection } from "astro:content";
 
+const allPosts = await getCollection("posts");
+const sorted = allPosts
+  .map((entry) => ({
+    ...entry.data,
+    href: `/posts/${entry.slug}`,
+  }))
+  .sort((a, b) => (a.date < b.date ? 1 : -1));
+const featured = sorted.find((p) => p.featured) ?? sorted[0];
+const recent = sorted.slice(0, 4);
+const tags = Array.from(new Set(sorted.flatMap((p) => p.tags))).slice(0, 8);
 ---
+<BaseLayout title="个人博客 · 首页">
+  <SiteHeader
+    links={[
+      { href: "#featured", label: "精选" },
+      { href: "#posts", label: "文章" },
+      { href: "#topics", label: "主题" },
+      { href: "/posts", label: "归档" },
+      { href: "/tags", label: "标签" },
+    ]}
+  />
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+  <main class="container">
+    <Hero />
+    <FeaturedSection featured={featured} recent={recent} />
+    <Topics tags={tags} />
+    <PostGrid posts={sorted} />
+    <Newsletter />
+  </main>
+
+  <SiteFooter />
+</BaseLayout>

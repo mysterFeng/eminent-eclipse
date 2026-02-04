@@ -1,0 +1,14 @@
+---
+const { links = [] } = Astro.props;
+---
+<header class="site-header">
+  <div class="container nav">
+    <div class="logo">JH</div>
+    <nav class="nav-links">
+      {links.map((link) => (
+        <a href={link.href}>{link.label}</a>
+      ))}
+      <button class="btn btn-ghost theme-toggle" type="button" aria-label="切换主题">切换主题</button>
+    </nav>
+  </div>
+</header>

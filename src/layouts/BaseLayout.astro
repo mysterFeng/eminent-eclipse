@@ -1,0 +1,31 @@
+---
+import "../styles.css";
+const { title = "个人博客" } = Astro.props;
+---
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="bg-shapes" aria-hidden="true"></div>
+    <slot />
+    <script>
+      (function () {
+        var toggle = document.querySelector(".theme-toggle");
+        if (!toggle) return;
+        var root = document.documentElement;
+        toggle.addEventListener("click", function () {
+          var isDark = root.getAttribute("data-theme") === "dark";
+          if (isDark) {
+            root.setAttribute("data-theme", "light");
+          } else {
+            root.setAttribute("data-theme", "dark");
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

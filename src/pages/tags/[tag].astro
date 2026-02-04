@@ -1,0 +1,47 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+import PostGrid from "../../components/PostGrid.astro";
+import { getCollection } from "astro:content";
+import { deslugTag, slugifyTag } from "../../utils/slug";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts");
+  const tags = Array.from(new Set(posts.flatMap((p) => p.data.tags)));
+  return tags.map((tag) => ({
+    params: { tag: slugifyTag(tag) },
+  }));
+}
+
+const posts = await getCollection("posts");
+const allTags = Array.from(new Set(posts.flatMap((p) => p.data.tags)));
+const rawTag = Astro.params.tag;
+const tag = deslugTag(rawTag, allTags);
+const filtered = posts
+  .filter((p) => p.data.tags.includes(tag))
+  .map((entry) => ({ ...entry.data, href: `/posts/${entry.slug}` }))
+  .sort((a, b) => (a.date < b.date ? 1 : -1));
+---
+<BaseLayout title={`标签 · ${tag}`}>
+  <SiteHeader
+    links={[
+      { href: "/", label: "首页" },
+      { href: "/posts", label: "归档" },
+      { href: "/tags", label: "标签" },
+      { href: "#", label: "专题" },
+      { href: "#", label: "订阅" },
+    ]}
+  />
+
+  <main class="container">
+    <section class="post-grid">
+      <header class="section-head">
+        <h3>标签：{tag}</h3>
+      </header>
+      <PostGrid posts={filtered} showHeader={false} />
+    </section>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
