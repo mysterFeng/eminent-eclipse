@@ -1,7 +1,8 @@
 backend:
-  name: git-gateway
+  name: github
   repo: mysterFeng/eminent-eclipse
   branch: main
+  auth_endpoint: https://api.netlify.com/auth/done
 
 media_folder: "public/uploads"
 public_folder: "/uploads"
