@@ -1,0 +1,102 @@
+---
+title: "Flutter 性能优化实战：让界面更顺、更省电"
+description: "从构建、布局、滚动到图片与动画，系统梳理 Flutter 性能优化的关键路径。"
+date: "2026-02-05"
+readingTime: "10 分钟"
+tags: ["Flutter", "性能优化", "移动开发"]
+author: "JH"
+summary: "把性能问题拆成可操作的清单：减少重建、控制布局成本、优化滚动与图片加载。"
+featured: false
+---
+
+性能优化不是“最后再做”的事，而是从架构和代码习惯开始的系统工程。本文从最常见的卡顿来源出发，给你一套可落地的 Flutter 性能优化路径。
+
+## 1. 先定位，再优化：不要凭感觉改
+
+在动手之前，先回答两个问题：
+
+- 卡顿发生在**构建阶段**还是**绘制阶段**？
+- 影响范围是**局部组件**还是**整个页面**？
+
+最有效的做法是先用 Flutter 的性能工具观察帧耗时和重建次数，再针对性处理。
+
+## 2. 减少不必要的重建
+
+Flutter 的 UI 是声明式的，重建不可怕，可怕的是**无意义的重建**。
+
+实践要点：
+
+- **尽量使用 `const`**：能 const 就 const，减少 build 时对象创建。
+- **拆小组件**：把频繁更新的小区域拆成独立 widget。
+- **稳定 key**：列表项需要稳定的 key，避免错误复用导致重建。
+
+示例：
+
+```dart
+class Header extends StatelessWidget {
+  const Header({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Text(
+      'Flutter 性能优化',
+      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+    );
+  }
+}
+```
+
+## 3. 控制布局成本：避免深层嵌套
+
+布局成本过高的典型特征是：组件层级复杂、同一层嵌套多个 `Stack/Positioned`。优化策略：
+
+- 合并层级：能少一层就少一层
+- 避免 `IntrinsicHeight/IntrinsicWidth`（代价高）
+- 用 `SizedBox` 提前约束尺寸
+
+## 4. 列表滚动优化
+
+大列表是性能问题的高发区：
+
+- 使用 `ListView.builder` / `SliverList` 进行惰性构建
+- 避免在 item 内部做复杂计算
+- 图片使用占位与缓存策略
+
+```dart
+ListView.builder(
+  itemCount: items.length,
+  itemBuilder: (context, index) {
+    final item = items[index];
+    return ListTile(title: Text(item.title));
+  },
+)
+```
+
+## 5. 图片与媒体资源优化
+
+图片是最常见的性能杀手：
+
+- 控制图片尺寸（避免原图直上）
+- 使用缓存策略
+- 对于大图，考虑分辨率自适应
+
+## 6. 动画优化：让“顺滑感”可控
+
+动画导致掉帧时：
+
+- 避免在动画中触发全局重建
+- 使用 `RepaintBoundary` 隔离绘制
+- 降低动画粒度，减少过度复杂的过渡
+
+## 7. 一份可执行的性能清单
+
+- 页面卡顿 → 先查重建次数
+- 滚动掉帧 → 优化列表与图片
+- 动画抖动 → 隔离 repaint 区域
+- 布局耗时 → 减少嵌套与 intrinsic
+
+## 结语
+
+性能优化不是一场“冲刺”，而是持续迭代。你可以从今天开始，在每个页面开发完成后跑一次性能检查，把问题留在开发阶段解决。
+
+如果你需要更深入的排查流程或工具使用清单，留言告诉我，我可以写一篇「Flutter 性能诊断手册」。

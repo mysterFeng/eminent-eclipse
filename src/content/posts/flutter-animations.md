@@ -1,0 +1,92 @@
+---
+title: "Flutter 动画进阶：从隐式动画到自定义过渡"
+description: "掌握 Flutter 动画的核心概念与常用模式，构建更有质感的交互体验。"
+date: "2026-02-05"
+readingTime: "11 分钟"
+tags: ["Flutter", "动画", "交互体验"]
+author: "JH"
+summary: "从隐式动画开始，逐步掌握 AnimationController、Tween 与自定义过渡。"
+featured: false
+---
+
+动画是提升用户体验的关键手段，但“炫技”式动画容易适得其反。本文从 Flutter 动画体系入手，给你一个稳妥可扩展的进阶路线。
+
+## 1. 隐式动画：最简单的开始
+
+`AnimatedContainer` / `AnimatedOpacity` 等隐式动画适合快速提升 UI 质感，写法简单、维护成本低。
+
+```dart
+AnimatedOpacity(
+  duration: const Duration(milliseconds: 250),
+  opacity: isVisible ? 1 : 0,
+  child: const Text('Hello Flutter'),
+)
+```
+
+## 2. 显式动画：进入可控领域
+
+当你需要精确控制动画时，就要用 `AnimationController`：
+
+```dart
+class FadeInDemo extends StatefulWidget {
+  const FadeInDemo({super.key});
+  @override
+  State<FadeInDemo> createState() => _FadeInDemoState();
+}
+
+class _FadeInDemoState extends State<FadeInDemo>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController controller;
+  late final Animation<double> animation;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    animation = CurvedAnimation(parent: controller, curve: Curves.easeOut);
+    controller.forward();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(opacity: animation, child: const Text('Fade In'));
+  }
+}
+```
+
+## 3. Tween：动画的“语义层”
+
+Tween 不只是数值变化，它让动画有“意义”：
+
+- `Tween<double>` 控制大小/透明度
+- `ColorTween` 控制颜色渐变
+- `AlignmentTween` 控制布局位置
+
+## 4. 常用过渡模式
+
+- **Hero 动画**：跨页面过渡
+- **PageRouteBuilder**：自定义页面切换
+- **AnimatedSwitcher**：内容替换时平滑过渡
+
+## 5. 动画的性能与体验平衡
+
+动画不是越多越好：
+
+- 重要状态变化用动画
+- 可预测、短促的过渡更高级
+- 避免在动画中触发复杂计算
+
+## 结语
+
+Flutter 的动画体系并不复杂，关键是从“隐式”到“显式”的渐进掌握。你可以先统一使用隐式动画提升质感，再逐步引入可控的显式动画。
+
+如果你希望，我可以提供一套“动画设计清单”，帮助你把动效做得更一致、更有节奏。
