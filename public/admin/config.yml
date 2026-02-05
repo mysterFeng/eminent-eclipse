@@ -1,5 +1,5 @@
 backend:
-  name: github
+  name: git-gateway
   repo: mysterFeng/eminent-eclipse
   branch: main
 
