@@ -9,9 +9,10 @@ import { deslugTag, slugifyTag } from "../../utils/slug";
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
   const tags = Array.from(new Set(posts.flatMap((p) => p.data.tags)));
-  return tags.map((tag) => ({
-    params: { tag: slugifyTag(tag) },
-  }));
+  return tags
+    .map((tag) => ({ tag, slug: slugifyTag(tag) }))
+    .filter((t) => t.slug && t.slug.length > 0)
+    .map((t) => ({ params: { tag: t.slug } }));
 }
 
 const posts = await getCollection("posts");
