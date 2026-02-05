@@ -11,20 +11,65 @@ const { title = "个人博客" } = Astro.props;
   </head>
   <body>
     <div class="bg-shapes" aria-hidden="true"></div>
-    <slot />
+    <div class="page">
+      <slot />
+    </div>
     <script>
       (function () {
         var toggle = document.querySelector(".theme-toggle");
-        if (!toggle) return;
-        var root = document.documentElement;
-        toggle.addEventListener("click", function () {
-          var isDark = root.getAttribute("data-theme") === "dark";
-          if (isDark) {
-            root.setAttribute("data-theme", "light");
-          } else {
-            root.setAttribute("data-theme", "dark");
+        if (toggle) {
+          var root = document.documentElement;
+          toggle.addEventListener("click", function () {
+            var isDark = root.getAttribute("data-theme") === "dark";
+            root.setAttribute("data-theme", isDark ? "light" : "dark");
+          });
+        }
+
+        var navLinks = Array.prototype.slice.call(
+          document.querySelectorAll(".nav-link[data-target]")
+        );
+        if (!navLinks.length) return;
+
+        var sections = navLinks
+          .map(function (link) {
+            return document.getElementById(link.dataset.target);
+          })
+          .filter(Boolean);
+
+        var setActive = function (id) {
+          navLinks.forEach(function (link) {
+            var isActive = link.dataset.target === id;
+            link.classList.toggle("is-active", isActive);
+            if (isActive) {
+              link.setAttribute("aria-current", "true");
+            } else {
+              link.removeAttribute("aria-current");
+            }
+          });
+        };
+
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                setActive(entry.target.id);
+              }
+            });
+          },
+          {
+            rootMargin: "-40% 0px -55% 0px",
+            threshold: [0.1, 0.2, 0.4],
           }
+        );
+
+        sections.forEach(function (section) {
+          observer.observe(section);
         });
+
+        if (window.location.hash) {
+          var initial = window.location.hash.replace("#", "");
+          setActive(initial);
+        }
       })();
     </script>
   </body>

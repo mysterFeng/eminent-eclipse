@@ -5,9 +5,18 @@ const { links = [] } = Astro.props;
   <div class="container nav">
     <div class="logo">JH</div>
     <nav class="nav-links">
-      {links.map((link) => (
-        <a href={link.href}>{link.label}</a>
-      ))}
+      {links.map((link) => {
+        const isHash = link.href?.startsWith("#");
+        return (
+          <a
+            class={`nav-link${isHash ? " nav-anchor" : ""}`}
+            href={link.href}
+            data-target={isHash ? link.href.slice(1) : undefined}
+          >
+            {link.label}
+          </a>
+        );
+      })}
       <button class="btn btn-ghost theme-toggle" type="button" aria-label="切换主题">切换主题</button>
     </nav>
   </div>

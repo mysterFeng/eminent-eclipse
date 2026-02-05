@@ -1,12 +1,17 @@
 <section class="newsletter" id="newsletter">
   <div class="newsletter-card">
-    <div>
-      <h3>订阅每周精选</h3>
-      <p>每周一次，精选文章、工具与灵感。</p>
+    <div class="newsletter-copy">
+      <p class="eyebrow">每周精选</p>
+      <h3>订阅更新，获取 Flutter 实战清单</h3>
+      <p>每周一封，精选文章、工具与实践经验。邮件订阅正在内测，可先用 RSS。</p>
+      <div class="newsletter-actions">
+        <a class="btn" href="/rss.xml">先用 RSS 订阅</a>
+        <span class="newsletter-note">邮件订阅内测中</span>
+      </div>
     </div>
-    <form class="newsletter-form">
-      <input type="email" placeholder="你的邮箱" aria-label="邮箱" />
-      <button class="btn" type="submit">订阅</button>
+    <form class="newsletter-form" aria-disabled="true">
+      <input type="email" placeholder="邮件订阅内测中" aria-label="邮箱" disabled />
+      <button class="btn" type="button" disabled>订阅</button>
     </form>
   </div>
 </section>
