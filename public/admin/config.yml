@@ -2,7 +2,7 @@ backend:
   name: github
   repo: mysterFeng/eminent-eclipse
   branch: main
-  auth_endpoint: https://api.netlify.com/auth/done
+  auth_endpoint: https://api.netlify.com/auth
 
 media_folder: "public/uploads"
 public_folder: "/uploads"
