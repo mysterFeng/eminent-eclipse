@@ -8,7 +8,13 @@ import { deslugTag, slugifyTag } from "../../utils/slug";
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
-  const tags = Array.from(new Set(posts.flatMap((p) => p.data.tags)));
+  const tags = Array.from(
+    new Set(
+      posts
+        .flatMap((p) => p.data.tags)
+        .filter((t) => typeof t === "string" && t.trim().length > 0)
+    )
+  );
   return tags
     .map((tag) => ({ tag, slug: slugifyTag(tag) }))
     .filter((t) => t.slug && t.slug.length > 0)
