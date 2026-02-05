@@ -1,0 +1,25 @@
+backend:
+  name: github
+  repo: mysterFeng/eminent-eclipse
+  branch: main
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "posts"
+    label: "文章"
+    folder: "src/content/posts"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "标题", name: "title", widget: "string" }
+      - { label: "描述", name: "description", widget: "string" }
+      - { label: "日期", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "阅读时长", name: "readingTime", widget: "string", default: "8 分钟" }
+      - { label: "标签", name: "tags", widget: "list" }
+      - { label: "作者", name: "author", widget: "string", default: "JH" }
+      - { label: "摘要", name: "summary", widget: "string", required: false }
+      - { label: "封面", name: "cover", widget: "image", required: false }
+      - { label: "精选", name: "featured", widget: "boolean", default: false }
+      - { label: "正文", name: "body", widget: "markdown" }
