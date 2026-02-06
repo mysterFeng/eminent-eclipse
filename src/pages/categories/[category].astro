@@ -11,11 +11,18 @@ export async function getStaticPaths() {
     import.meta.env.DEV ? true : !data.draft
   );
   const categories = Array.from(
-    new Set(posts.map((p) => p.data.category))
+    new Set(
+      posts.map((p) =>
+        p.data.categoryCustom?.trim()
+          ? p.data.categoryCustom.trim()
+          : p.data.category
+      )
+    )
   );
-  return categories.map((category) => ({
-    params: { category: slugifyTag(category) },
-  }));
+  return categories
+    .map((category) => ({ raw: category, slug: slugifyTag(category) }))
+    .filter((item) => item.slug && item.slug.length > 0)
+    .map((item) => ({ params: { category: item.slug } }));
 }
 
 const { category } = Astro.params;
