@@ -3,7 +3,7 @@ const { links = [] } = Astro.props;
 ---
 <header class="site-header">
   <div class="container nav">
-    <div class="logo">JH</div>
+    <div class="logo">JJ</div>
     <nav class="nav-links">
       {links.map((link) => {
         const isHash = link.href?.startsWith("#");
@@ -12,6 +12,7 @@ const { links = [] } = Astro.props;
             class={`nav-link${isHash ? " nav-anchor" : ""}`}
             href={link.href}
             data-target={isHash ? link.href.slice(1) : undefined}
+            data-path={!isHash ? link.href : undefined}
           >
             {link.label}
           </a>

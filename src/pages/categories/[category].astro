@@ -4,37 +4,37 @@ import SiteHeader from "../../components/SiteHeader.astro";
 import SiteFooter from "../../components/SiteFooter.astro";
 import PostGrid from "../../components/PostGrid.astro";
 import { getCollection } from "astro:content";
+import { deslugTag, slugifyTag } from "../../utils/slug";
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts", ({ data }) =>
     import.meta.env.DEV ? true : !data.draft
   );
-  const tags = Array.from(
-    new Set(
-      posts
-        .flatMap((p) => p.data.tags)
-        .filter((t) => typeof t === "string" && t.trim().length > 0)
-    )
+  const categories = Array.from(
+    new Set(posts.map((p) => p.data.category))
   );
-  return tags.map((tag) => ({ params: { tag } }));
+  return categories.map((category) => ({
+    params: { category: slugifyTag(category) },
+  }));
 }
 
+const { category } = Astro.params;
 const posts = await getCollection("posts", ({ data }) =>
   import.meta.env.DEV ? true : !data.draft
 );
-const rawTagParam = Astro.params.tag ?? "";
-let tag = rawTagParam;
-try {
-  tag = decodeURIComponent(rawTagParam);
-} catch (error) {
-  tag = rawTagParam;
-}
+const getCategory = (post) =>
+  post.data.categoryCustom?.trim()
+    ? post.data.categoryCustom.trim()
+    : post.data.category;
+const allCategories = Array.from(new Set(posts.map((p) => getCategory(p))));
+const rawCategory = decodeURIComponent(category ?? "");
+const categoryLabel = deslugTag(rawCategory, allCategories);
 const filtered = posts
-  .filter((p) => p.data.tags.includes(tag))
+  .filter((p) => slugifyTag(getCategory(p)) === slugifyTag(categoryLabel))
   .map((entry) => ({ ...entry.data, href: `/posts/${entry.slug}` }))
   .sort((a, b) => (a.date < b.date ? 1 : -1));
 ---
-<BaseLayout title={`标签 · ${tag}`}>
+<BaseLayout title={`分类 · ${categoryLabel}`}>
   <SiteHeader
     links={[
       { href: "/", label: "首页" },
@@ -46,7 +46,7 @@ const filtered = posts
   <main class="container">
     <section class="post-grid">
       <header class="section-head">
-        <h3>标签：{tag}</h3>
+        <h3>分类：{categoryLabel}</h3>
       </header>
       <PostGrid posts={filtered} showHeader={false} />
     </section>

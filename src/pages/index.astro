@@ -9,16 +9,22 @@ import PostGrid from "../components/PostGrid.astro";
 import Newsletter from "../components/Newsletter.astro";
 import { getCollection } from "astro:content";
 
-const allPosts = await getCollection("posts");
+const isDev = import.meta.env.DEV;
+
+const allPosts = await getCollection("posts", ({ data }) =>
+  isDev ? true : !data.draft
+);
 const sorted = allPosts
   .map((entry) => ({
     ...entry.data,
     href: `/posts/${entry.slug}`,
   }))
   .sort((a, b) => (a.date < b.date ? 1 : -1));
+const getCategory = (post) =>
+  post.categoryCustom?.trim() ? post.categoryCustom.trim() : post.category;
 const featured = sorted.find((p) => p.featured) ?? sorted[0];
 const recent = sorted.slice(0, 4);
-const tags = Array.from(new Set(sorted.flatMap((p) => p.tags))).slice(0, 8);
+const categories = Array.from(new Set(sorted.map((p) => getCategory(p)))).sort();
 ---
 <BaseLayout title="个人博客 · 首页">
   <SiteHeader
@@ -34,7 +40,7 @@ const tags = Array.from(new Set(sorted.flatMap((p) => p.tags))).slice(0, 8);
   <main class="container">
     <Hero />
     <FeaturedSection featured={featured} recent={recent} />
-    <Topics tags={tags} />
+    <Topics tags={categories} basePath="/categories" />
     <PostGrid posts={sorted} />
     <Newsletter />
   </main>

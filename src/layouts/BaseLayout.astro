@@ -8,6 +8,18 @@ const { title = "个人博客" } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("theme");
+          if (stored) {
+            document.documentElement.setAttribute("data-theme", stored);
+          }
+        } catch (e) {
+          // ignore storage errors
+        }
+      })();
+    </script>
   </head>
   <body>
     <div class="bg-shapes" aria-hidden="true"></div>
@@ -16,12 +28,23 @@ const { title = "个人博客" } = Astro.props;
     </div>
     <script>
       (function () {
-        var toggle = document.querySelector(".theme-toggle");
-        if (toggle) {
+        var toggles = Array.prototype.slice.call(
+          document.querySelectorAll(".theme-toggle")
+        );
+        if (toggles.length) {
           var root = document.documentElement;
-          toggle.addEventListener("click", function () {
+          var onToggle = function () {
             var isDark = root.getAttribute("data-theme") === "dark";
-            root.setAttribute("data-theme", isDark ? "light" : "dark");
+            var nextTheme = isDark ? "light" : "dark";
+            root.setAttribute("data-theme", nextTheme);
+            try {
+              localStorage.setItem("theme", nextTheme);
+            } catch (e) {
+              // ignore storage errors
+            }
+          };
+          toggles.forEach(function (toggle) {
+            toggle.addEventListener("click", onToggle);
           });
         }
 

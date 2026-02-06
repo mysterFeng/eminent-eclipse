@@ -5,13 +5,15 @@ const posts = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    date: z.string(),
-    readingTime: z.string(),
+    date: z.coerce.date().transform((d) => d.toISOString().slice(0, 10)),
+    category: z.string().default("Flutter"),
+    categoryCustom: z.string().optional(),
     tags: z.array(z.string()),
-    author: z.string().default("JH"),
+    author: z.string().default("JJ"),
     summary: z.string().optional(),
     cover: z.string().optional(),
     featured: z.boolean().default(false),
+    draft: z.boolean().optional(),
   }),
 });
 

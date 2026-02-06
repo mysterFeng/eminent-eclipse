@@ -7,7 +7,7 @@ const { featured, recent } = Astro.props;
       <p class="eyebrow">精选文章</p>
       <h2>{featured.title}</h2>
       <p class="excerpt">{featured.summary ?? featured.description}</p>
-      <div class="meta">{featured.readingTime} · {featured.date} · {featured.author}</div>
+      <div class="meta">{featured.date} · {featured.author}</div>
       <a class="btn" href={featured.href}>阅读全文</a>
     </div>
     <div class="featured-visual">
@@ -25,7 +25,7 @@ const { featured, recent } = Astro.props;
     {recent.map((item) => (
       <a class="recent-item" href={item.href}>
         <span class="title">{item.title}</span>
-        <span class="meta">{item.readingTime}</span>
+        <span class="meta">{item.date}</span>
       </a>
     ))}
   </aside>

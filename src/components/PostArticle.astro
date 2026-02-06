@@ -1,40 +1,63 @@
 ---
-import { slugifyTag } from "../utils/slug";
-const { post } = Astro.props;
+const { post, prev, next } = Astro.props;
 ---
 <article class="post-article">
   <header class="post-head">
     <p class="eyebrow">精选文章</p>
     <h1>{post.title}</h1>
-    <div class="meta">{post.readingTime} · {post.date} · {post.tags?.[0]}</div>
+    <div class="meta">
+      {post.date}
+      {post.tags?.[0]?.trim() ? (
+        <>
+          {" "}·{" "}
+          <a href={`/tags/${encodeURIComponent(post.tags[0])}`}>{post.tags[0]}</a>
+        </>
+      ) : (
+        ""
+      )}
+    </div>
     <div class="post-tags">
-      {post.tags?.map((tag) => (
-        <a href={`/tags/${slugifyTag(tag)}`}>{tag}</a>
-      ))}
+      {post.tags?.map((tag) =>
+        tag?.trim() ? (
+          <a href={`/tags/${encodeURIComponent(tag)}`}>{tag}</a>
+        ) : null
+      )}
     </div>
   </header>
 
-  <div class="post-cover">
-    <div
-      class="cover-art"
-      style={post.cover ? `background-image:url(${post.cover}); background-size:cover; background-position:center;` : undefined}
-    ></div>
-  </div>
+  {post.cover && (
+    <div class="post-cover">
+      <div
+        class="cover-art"
+        style={`background-image:url(${post.cover}); background-size:cover; background-position:center;`}
+      ></div>
+    </div>
+  )}
 
   <div class="post-body">
     <slot />
   </div>
 
   <section class="author">
-    <div class="author-avatar">JH</div>
+    <div class="author-avatar">JJ</div>
     <div>
       <h4>作者简介</h4>
       <p>专注于内容创作、产品策略与设计实践。欢迎交流合作。</p>
     </div>
   </section>
 
-  <section class="post-nav">
-    <a class="btn btn-ghost" href="#">上一篇</a>
-    <a class="btn" href="#">下一篇</a>
-  </section>
+  {(prev || next) && (
+    <section class="post-nav">
+      {prev ? (
+        <a class="btn btn-ghost" href={`/posts/${prev.slug}`}>上一篇</a>
+      ) : (
+        <span></span>
+      )}
+      {next ? (
+        <a class="btn" href={`/posts/${next.slug}`}>下一篇</a>
+      ) : (
+        <span></span>
+      )}
+    </section>
+  )}
 </article>

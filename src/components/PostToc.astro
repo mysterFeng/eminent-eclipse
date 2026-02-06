@@ -1,8 +1,16 @@
-<aside class="post-toc">
-  <h4>目录</h4>
-  <ul>
-    <li><a href="#">输入系统</a></li>
-    <li><a href="#">整理系统</a></li>
-    <li><a href="#">输出系统</a></li>
-  </ul>
-</aside>
+---
+const { headings = [] } = Astro.props;
+const items = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+---
+{items.length > 0 && (
+  <aside class="post-toc">
+    <h4>目录</h4>
+    <ul>
+      {items.map((item) => (
+        <li class={item.depth === 3 ? "toc-child" : ""}>
+          <a href={`#${item.slug}`}>{item.text}</a>
+        </li>
+      ))}
+    </ul>
+  </aside>
+)}

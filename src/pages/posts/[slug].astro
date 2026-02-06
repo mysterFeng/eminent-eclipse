@@ -7,15 +7,25 @@ import PostToc from "../../components/PostToc.astro";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("posts");
+  const posts = await getCollection("posts", ({ data }) =>
+    import.meta.env.DEV ? true : !data.draft
+  );
   return posts.map((post) => ({ params: { slug: post.slug } }));
 }
 
 const { slug } = Astro.params;
-const posts = await getCollection("posts");
-const entry = posts.find((p) => p.slug === slug);
+const posts = await getCollection("posts", ({ data }) =>
+  import.meta.env.DEV ? true : !data.draft
+);
+const sorted = posts
+  .slice()
+  .sort((a, b) => (a.data.date < b.data.date ? 1 : -1));
+const index = sorted.findIndex((p) => p.slug === slug);
+const entry = sorted[index];
 if (!entry) throw new Error("Post not found");
-const { Content } = await entry.render();
+const { Content, headings } = await entry.render();
+const prev = index < sorted.length - 1 ? sorted[index + 1] : null;
+const next = index > 0 ? sorted[index - 1] : null;
 ---
 <BaseLayout title={`文章 · ${entry.data.title}`}>
   <SiteHeader
@@ -23,16 +33,14 @@ const { Content } = await entry.render();
       { href: "/", label: "首页" },
       { href: "/posts", label: "归档" },
       { href: "/tags", label: "标签" },
-      { href: "#", label: "专题" },
-      { href: "#", label: "订阅" },
     ]}
   />
 
   <main class="container post">
-    <PostArticle post={entry.data}>
+    <PostArticle post={entry.data} prev={prev} next={next}>
       <Content />
     </PostArticle>
-    <PostToc />
+    <PostToc headings={headings} />
   </main>
 
   <SiteFooter />
