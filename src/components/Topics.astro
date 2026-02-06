@@ -3,7 +3,7 @@ import { slugifyTag } from "../utils/slug";
 const { tags = [], basePath = "/categories" } = Astro.props;
 ---
 <section class="topics" id="topics">
-  <h3>主题</h3>
+  <h3>分类</h3>
   <div class="topic-pills">
     {tags.map((tag) =>
       slugifyTag(tag) ? (

@@ -24,14 +24,20 @@ const getCategory = (post) =>
   post.categoryCustom?.trim() ? post.categoryCustom.trim() : post.category;
 const featured = sorted.find((p) => p.featured) ?? sorted[0];
 const recent = sorted.slice(0, 4);
-const categories = Array.from(new Set(sorted.map((p) => getCategory(p)))).sort();
+const categories = Array.from(
+  new Set(
+    sorted
+      .map((p) => getCategory(p))
+      .filter((c) => typeof c === "string" && c.trim().length > 0)
+  )
+).sort();
 ---
 <BaseLayout title="个人博客 · 首页">
   <SiteHeader
     links={[
       { href: "#featured", label: "精选" },
       { href: "#posts", label: "文章" },
-      { href: "#topics", label: "主题" },
+      { href: "#topics", label: "分类" },
       { href: "/posts", label: "归档" },
       { href: "/tags", label: "标签" },
     ]}

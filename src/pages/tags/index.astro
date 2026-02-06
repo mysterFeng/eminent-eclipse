@@ -17,7 +17,13 @@ const getCategory = (post) =>
   post.data.categoryCustom?.trim()
     ? post.data.categoryCustom.trim()
     : post.data.category;
-const categories = Array.from(new Set(posts.map((p) => getCategory(p)))).sort();
+const categories = Array.from(
+  new Set(
+    posts
+      .map((p) => getCategory(p))
+      .filter((c) => typeof c === "string" && c.trim().length > 0)
+  )
+).sort();
 ---
 <BaseLayout title="标签">
   <SiteHeader
