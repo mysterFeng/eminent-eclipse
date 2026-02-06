@@ -20,15 +20,17 @@ const sorted = allPosts
     href: `/posts/${entry.slug}`,
   }))
   .sort((a, b) => (a.date < b.date ? 1 : -1));
+const normalizeCategory = (value) =>
+  typeof value === "string" ? value.trim() : "";
 const getCategory = (post) =>
-  post.categoryCustom?.trim() ? post.categoryCustom.trim() : post.category;
+  normalizeCategory(post.categoryCustom) || normalizeCategory(post.category);
 const featured = sorted.find((p) => p.featured) ?? sorted[0];
 const recent = sorted.slice(0, 4);
 const categories = Array.from(
   new Set(
     sorted
       .map((p) => getCategory(p))
-      .filter((c) => typeof c === "string" && c.trim().length > 0)
+      .filter((c) => c.length > 0)
   )
 ).sort();
 ---

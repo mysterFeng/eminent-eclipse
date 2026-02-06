@@ -4,40 +4,43 @@ import SiteHeader from "../../components/SiteHeader.astro";
 import SiteFooter from "../../components/SiteFooter.astro";
 import PostGrid from "../../components/PostGrid.astro";
 import { getCollection } from "astro:content";
-import { deslugTag, slugifyTag } from "../../utils/slug";
+import { deslugTag } from "../../utils/slug";
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts", ({ data }) =>
     import.meta.env.DEV ? true : !data.draft
   );
+  const normalizeCategory = (value) =>
+    typeof value === "string" ? value.trim() : "";
   const categories = Array.from(
     new Set(
-      posts.map((p) =>
-        p.data.categoryCustom?.trim()
-          ? p.data.categoryCustom.trim()
-          : p.data.category
-      )
+      posts
+        .map((p) =>
+          normalizeCategory(p.data.categoryCustom) ||
+          normalizeCategory(p.data.category)
+        )
+        .filter((c) => c.length > 0)
     )
   );
-  return categories
-    .map((category) => ({ raw: category, slug: slugifyTag(category) }))
-    .filter((item) => item.slug && item.slug.length > 0)
-    .map((item) => ({ params: { category: item.slug } }));
+  return categories.map((category) => ({
+    params: { category },
+  }));
 }
 
 const { category } = Astro.params;
 const posts = await getCollection("posts", ({ data }) =>
   import.meta.env.DEV ? true : !data.draft
 );
+const normalizeCategory = (value) =>
+  typeof value === "string" ? value.trim() : "";
 const getCategory = (post) =>
-  post.data.categoryCustom?.trim()
-    ? post.data.categoryCustom.trim()
-    : post.data.category;
+  normalizeCategory(post.data.categoryCustom) ||
+  normalizeCategory(post.data.category);
 const allCategories = Array.from(new Set(posts.map((p) => getCategory(p))));
 const rawCategory = decodeURIComponent(category ?? "");
 const categoryLabel = deslugTag(rawCategory, allCategories);
 const filtered = posts
-  .filter((p) => slugifyTag(getCategory(p)) === slugifyTag(categoryLabel))
+  .filter((p) => getCategory(p) === categoryLabel)
   .map((entry) => ({ ...entry.data, href: `/posts/${entry.slug}` }))
   .sort((a, b) => (a.date < b.date ? 1 : -1));
 ---

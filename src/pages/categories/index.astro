@@ -3,15 +3,15 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import SiteHeader from "../../components/SiteHeader.astro";
 import SiteFooter from "../../components/SiteFooter.astro";
 import { getCollection } from "astro:content";
-import { slugifyTag } from "../../utils/slug";
 
 const posts = await getCollection("posts", ({ data }) =>
   import.meta.env.DEV ? true : !data.draft
 );
+const normalizeCategory = (value) =>
+  typeof value === "string" ? value.trim() : "";
 const getCategory = (post) =>
-  post.data.categoryCustom?.trim()
-    ? post.data.categoryCustom.trim()
-    : post.data.category;
+  normalizeCategory(post.data.categoryCustom) ||
+  normalizeCategory(post.data.category);
 const categories = Array.from(new Set(posts.map((p) => getCategory(p)))).sort();
 ---
 <BaseLayout title="分类">
@@ -29,8 +29,8 @@ const categories = Array.from(new Set(posts.map((p) => getCategory(p)))).sort();
       <p>按分类查看文章。</p>
       <div class="topic-pills">
         {categories.map((category) =>
-          slugifyTag(category) ? (
-            <a href={`/categories/${encodeURIComponent(slugifyTag(category))}`}>{category}</a>
+          category?.trim() ? (
+            <a href={`/categories/${encodeURIComponent(category)}`}>{category}</a>
           ) : null
         )}
       </div>

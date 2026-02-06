@@ -3,6 +3,7 @@ title: "Cloudflare Pages 部署"
 description: "记录 Astro 静态站点在 Cloudflare Pages 上的正确部署流程，并补充常见方案对比。"
 date: "2026-02-06"
 category: "部署"
+categoryCustom: "部署"
 tags: ["静态网站部署"]
 author: "JJ"
 summary: "梳理 Pages 与 Workers 的差别，给出正确配置与常见错误的解决方案。"
