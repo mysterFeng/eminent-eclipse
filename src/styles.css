@@ -367,12 +367,49 @@ a {
 
 .tags-page .topics {
   width: 100%;
+  align-items: stretch;
 }
 
 .tags-page .topic-pills {
   width: 100%;
 }
 
+.tag-search {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 16px 0;
+}
+
+.tag-search input {
+  flex: 1;
+  min-width: 220px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.tag-search input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+.tag-count {
+  font-size: 0.9rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.tag-empty {
+  color: var(--muted);
+  margin-top: 8px;
+  font-size: 0.95rem;
+}
 
 
 .topic-pills a {

@@ -48,13 +48,51 @@ const categories = Array.from(
 
     <section class="topics">
       <h3>全部标签</h3>
-      <div class="topic-pills">
+      <div class="tag-search">
+        <input
+          type="search"
+          placeholder="搜索标签"
+          aria-label="搜索标签"
+          autocomplete="off"
+          data-tag-search
+        />
+        <span class="tag-count" data-tag-count></span>
+      </div>
+      <div class="topic-pills" data-tag-list>
         {tags.map((tag) => (
-          <a href={`/tags/${encodeURIComponent(tag)}`}>{tag}</a>
+          <a href={`/tags/${encodeURIComponent(tag)}`} data-tag={tag.toLowerCase()}>
+            {tag}
+          </a>
         ))}
       </div>
+      <p class="tag-empty" data-tag-empty hidden>没有匹配的标签</p>
     </section>
   </main>
 
   <SiteFooter />
 </BaseLayout>
+
+<script type="module">
+  const input = document.querySelector("[data-tag-search]");
+  const list = document.querySelector("[data-tag-list]");
+  const empty = document.querySelector("[data-tag-empty]");
+  const count = document.querySelector("[data-tag-count]");
+
+  if (input && list) {
+    const items = Array.from(list.querySelectorAll("a"));
+    const update = () => {
+      const query = input.value.trim().toLowerCase();
+      let visible = 0;
+      items.forEach((item) => {
+        const text = (item.dataset.tag || item.textContent || "").toLowerCase();
+        const match = query.length === 0 || text.includes(query);
+        item.style.display = match ? "" : "none";
+        if (match) visible += 1;
+      });
+      if (empty) empty.hidden = visible !== 0;
+      if (count) count.textContent = query ? `匹配 ${visible} 个` : `共 ${items.length} 个`;
+    };
+    input.addEventListener("input", update);
+    update();
+  }
+</script>
