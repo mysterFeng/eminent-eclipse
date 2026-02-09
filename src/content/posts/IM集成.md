@@ -1,5 +1,5 @@
 ---
-title: "Flutter IM 集成要点"
+title: "24. Flutter IM 集成要点"
 description: "从工程视角梳理 Flutter 即时通信集成的关键点，覆盖初始化、状态恢复与稳定性建设。"
 date: "2022-04-29"
 category: "Flutter"

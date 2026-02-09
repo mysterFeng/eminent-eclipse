@@ -1,5 +1,5 @@
 ---
-title: "Flutter + Unity 融合"
+title: "25. Flutter + Unity 融合"
 description: "基于 flutter_unity_widget 的实战流程，讲清初始化、通信、生命周期与性能策略。"
 date: "2023-12-07"
 category: "Flutter"

@@ -1,5 +1,5 @@
 ---
-title: "Flutter Isolate 并发实战"
+title: "38. Flutter Isolate 并发实战"
 description: "掌握 Isolate 的运行模型、任务分流与通信设计，避免并发性能陷阱。"
 date: "2025-01-12"
 category: "Flutter"

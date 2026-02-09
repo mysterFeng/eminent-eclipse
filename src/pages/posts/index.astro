@@ -23,6 +23,10 @@ const grouped = sorted.reduce((acc, post) => {
   return acc;
 }, {});
 const groupEntries = Object.entries(grouped).sort((a, b) => a[0].localeCompare(b[0]));
+const getOrderFromTitle = (title = "") => {
+  const match = title.match(/^(\d{1,3})\./);
+  return match ? Number(match[1]) : Number.POSITIVE_INFINITY;
+};
 
 export async function getStaticPaths({ paginate }) {
   const posts = await getCollection("posts", ({ data }) =>
@@ -56,19 +60,27 @@ const page =
       <div class="archive-sticky">
         <h4>分类目录</h4>
         <nav class="archive-tree">
-          {groupEntries.map(([category, posts], index) => (
+          {groupEntries.map(([category, posts], index) => {
+            const orderedPosts = [...posts].sort((a, b) => {
+              const orderA = getOrderFromTitle(a.title);
+              const orderB = getOrderFromTitle(b.title);
+              if (orderA !== orderB) return orderA - orderB;
+              return a.title.localeCompare(b.title, "zh-Hans-CN");
+            });
+            return (
             <details class="archive-group" open={index === 0}>
               <summary>
                 <span>{category}</span>
                 <em>{posts.length}</em>
               </summary>
               <div class="archive-items">
-                {posts.map((post) => (
+                {orderedPosts.map((post) => (
                   <a href={post.href}>{post.title}</a>
                 ))}
               </div>
             </details>
-          ))}
+            );
+          })}
         </nav>
       </div>
     </aside>
