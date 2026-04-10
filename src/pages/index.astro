@@ -45,8 +45,9 @@ const categories = Array.from(
     ]}
   />
 
+  <Hero />
+
   <main class="container">
-    <Hero />
     <FeaturedSection featured={featured} recent={recent} />
     <Topics tags={categories} basePath="/categories" />
     <PostGrid posts={sorted} />

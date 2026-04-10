@@ -25,7 +25,7 @@ const categories = Array.from(new Set(posts.map((p) => getCategory(p)))).sort();
 
   <main class="container tags-page">
     <section class="topics">
-      <h3>全部分类</h3>
+      <h3 data-num="01">全部分类</h3>
       <p>按分类查看文章。</p>
       <div class="topic-pills">
         {categories.map((category) =>

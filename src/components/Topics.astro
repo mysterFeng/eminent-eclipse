@@ -2,7 +2,7 @@
 const { tags = [], basePath = "/categories" } = Astro.props;
 ---
 <section class="topics" id="topics">
-  <h3>分类</h3>
+  <h3 data-num="02">分类</h3>
   <div class="topic-pills">
     {tags.map((tag) =>
       tag?.trim() ? (

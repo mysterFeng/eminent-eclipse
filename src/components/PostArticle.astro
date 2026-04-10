@@ -1,28 +1,27 @@
 ---
 const { post, prev, next } = Astro.props;
+const eyebrow =
+  (typeof post.categoryCustom === "string" && post.categoryCustom.trim()) ||
+  (typeof post.category === "string" && post.category.trim()) ||
+  (post.tags?.[0]?.trim() ?? "Article");
 ---
 <article class="post-article">
   <header class="post-head">
-    <p class="eyebrow">精选文章</p>
+    <p class="eyebrow">{eyebrow}</p>
     <h1>{post.title}</h1>
     <div class="meta">
-      {post.date}
-      {post.tags?.[0]?.trim() ? (
-        <>
-          {" "}·{" "}
-          <a href={`/tags/${encodeURIComponent(post.tags[0])}`}>{post.tags[0]}</a>
-        </>
-      ) : (
-        ""
-      )}
+      <span>{post.date}</span>
+      {post.author && <><span> · </span><span>{post.author}</span></>}
     </div>
-    <div class="post-tags">
-      {post.tags?.map((tag) =>
-        tag?.trim() ? (
-          <a href={`/tags/${encodeURIComponent(tag)}`}>{tag}</a>
-        ) : null
-      )}
-    </div>
+    {post.tags?.length > 0 && (
+      <div class="post-tags">
+        {post.tags.map((tag) =>
+          tag?.trim() ? (
+            <a href={`/tags/${encodeURIComponent(tag)}`}>{tag}</a>
+          ) : null
+        )}
+      </div>
+    )}
   </header>
 
   {post.cover && (
@@ -41,7 +40,7 @@ const { post, prev, next } = Astro.props;
   <section class="author">
     <div class="author-avatar">JJ</div>
     <div>
-      <h4>作者简介</h4>
+      <h4>关于作者</h4>
       <p>专注于内容创作、产品策略与设计实践。欢迎交流合作。</p>
     </div>
   </section>
@@ -49,12 +48,12 @@ const { post, prev, next } = Astro.props;
   {(prev || next) && (
     <section class="post-nav">
       {prev ? (
-        <a class="btn btn-ghost" href={`/posts/${prev.slug}`}>上一篇</a>
+        <a class="btn btn-ghost" href={`/posts/${prev.slug}`}>← 上一篇</a>
       ) : (
         <span></span>
       )}
       {next ? (
-        <a class="btn" href={`/posts/${next.slug}`}>下一篇</a>
+        <a class="btn" href={`/posts/${next.slug}`}>下一篇 →</a>
       ) : (
         <span></span>
       )}

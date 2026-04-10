@@ -36,7 +36,7 @@ const categories = Array.from(
 
   <main class="container tags-page">
     <section class="topics">
-      <h3>全部分类</h3>
+      <h3 data-num="01">全部分类</h3>
       <div class="topic-pills">
         {categories.map((category) =>
           category?.trim() ? (
@@ -47,7 +47,7 @@ const categories = Array.from(
     </section>
 
     <section class="topics">
-      <h3>全部标签</h3>
+      <h3 data-num="02">全部标签</h3>
       <div class="tag-search">
         <input
           type="search"
