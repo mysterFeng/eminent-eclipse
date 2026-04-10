@@ -93,7 +93,7 @@ vault 是私人知识库，什么都有：草稿、未脱敏的笔记、临时�
 
 新规则：分类必填，没填就报错退出。强制每篇文章在 vault 那一侧就把分类想清楚，而不是在脚本里兜底。这条规则也写进了 `/publish` 命令的校验流程——缺 `category` 时它会停下来问你要一个，而不是默默替你填。
 
-## 踩的一个坑：分支不一致差点删文章
+## 第一个坑：分支不一致差点删文章
 
 第一次跑工作流时差点把博客上已发布的两篇文章误删。原因：
 
@@ -107,6 +107,52 @@ vault 是私人知识库，什么都有：草稿、未脱敏的笔记、临时�
 2. 在 `/publish` 命令的前置约束里硬编码"必须在 main 分支才能发布"
 
 教训：**单一真相源**不能省。任何分布式同步都依赖一个明确的 source of truth，分支偏移就是最常见的祸源。
+
+## 第二个坑：`[skip ci]` 的连环套娃
+
+整条链路第一次跑完，绿勾，sync 成功，my-blog main 也确实多了一条 commit。但博客上死活看不到那篇新文章。
+
+回查一圈：
+
+- ✅ vault main 有 `publish: true`
+- ✅ Sync workflow 跑了，绿勾
+- ✅ my-blog main 多了一条 sync commit
+- ❌ Cloudflare Pages 部署列表里那条 commit 状态是「**已跳过**」
+
+原因藏在我自己埋的坑里。Sync workflow 的 commit message 我是这么写的：
+
+```text
+sync: 从 knowledge-vault 同步博客文章
+
+[skip ci]
+```
+
+加 `[skip ci]` 的本意是防止其它 GitHub Actions 被这条自动 commit 触发——这是 CI 圈子里的常用约定。**但 Cloudflare Pages 也识别这个标记**。结果就是：同步推上去了，CF Pages 看到 message 里有 `[skip ci]`，直接跳过部署。Action 显示成功（它确实成功了），但部署没发生，博客没更新。
+
+发现后我立刻删掉了 workflow 里那行，做了一条修复 commit。结果——**这条修复 commit 也被跳过了** 🤦
+
+为什么？因为我的修复 commit message 是这样的：
+
+```text
+sync workflow: 移除 commit message 里的 [skip ci]
+
+Cloudflare Pages 会识别 [skip ci] 并跳过构建...
+```
+
+**body 里我又写了 `[skip ci]` 做说明文字**。CF Pages 扫的是整条 message（subject + body），不只看标题。所以这条"用来修复 `[skip ci]` 的 commit"自己又被自己 `[skip ci]` 了。
+
+最后用一条空 commit 才把构建踢起来：
+
+```bash
+git commit --allow-empty -m "chore: trigger Cloudflare Pages rebuild"
+git push
+```
+
+教训三条：
+
+1. **Magic strings 是平台级共识**。`[skip ci]` 不是 GitHub Actions 独有，Cloudflare Pages、GitLab CI、CircleCI 都会响应。在多 CI 系统的项目里加这种标记前要先确认所有下游平台的行为。
+2. **不要在 commit message 里讨论 magic strings**。即使是 body 里的说明文字也会被扫到。要讨论就写在 PR description、代码注释、或文档里——反正不在 commit message。
+3. **避免修一个不存在的问题**。Sync workflow 根本不需要 `[skip ci]`：本仓库目前只有这一个 workflow，且它只在 `workflow_dispatch` / `repository_dispatch` 上触发，不监听 `push`，根本不会循环触发自己。我加 `[skip ci]` 是在防一个不存在的问题，引入了一个真实的 bug。
 
 ## 跑通后的效果
 
