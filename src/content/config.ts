@@ -6,7 +6,7 @@ const posts = defineCollection({
     title: z.string(),
     description: z.string(),
     date: z.coerce.date().transform((d) => d.toISOString().slice(0, 10)),
-    category: z.string().default("Flutter"),
+    category: z.string(),
     categoryCustom: z.string().optional(),
     tags: z.array(z.string()),
     author: z.string().default("JJ"),
@@ -14,6 +14,7 @@ const posts = defineCollection({
     cover: z.string().optional(),
     featured: z.boolean().default(false),
     draft: z.boolean().optional(),
+    source: z.string().optional(),
   }),
 });
 
