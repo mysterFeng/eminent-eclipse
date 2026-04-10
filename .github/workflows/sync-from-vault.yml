@@ -1,0 +1,68 @@
+name: Sync from Knowledge Vault
+
+# 触发方式：
+#   1. workflow_dispatch — 在 GitHub UI 或 gh CLI 手动跑
+#   2. repository_dispatch — vault 端 /publish 命令通过 API 触发
+#
+# 工作流会从 mysterFeng/knowledge-vault 克隆最新 main 分支，
+# 运行 scripts/sync-vault.mjs 把 publish:true 的文章同步到 src/content/posts，
+# 有变更则自动 commit & push 回本仓库 main，触发 Netlify 重建。
+#
+# 必需 Secrets:
+#   VAULT_TOKEN — 一个 fine-grained PAT，对 mysterFeng/knowledge-vault 有 Contents:read 权限
+#                 （vault 是私有仓库，默认 GITHUB_TOKEN 无法跨仓库克隆）
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [sync-vault]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-from-vault
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout blog
+        uses: actions/checkout@v4
+
+      - name: Checkout knowledge-vault
+        uses: actions/checkout@v4
+        with:
+          repository: mysterFeng/knowledge-vault
+          token: ${{ secrets.VAULT_TOKEN }}
+          path: vault
+          ref: main
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run sync
+        env:
+          VAULT_DIR: ${{ github.workspace }}/vault/blog
+        run: npm run sync
+
+      - name: Commit and push if changed
+        run: |
+          if [[ -z $(git status --porcelain src/content/posts) ]]; then
+            echo "No vault changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/content/posts
+          git commit -m "sync: 从 knowledge-vault 同步博客文章
+
+          [skip ci]"
+          git push
