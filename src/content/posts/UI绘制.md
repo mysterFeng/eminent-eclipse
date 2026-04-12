@@ -4,7 +4,7 @@ date: "2018-07-08"
 description: "自绘视图、图层与渲染性能要点。"
 category: "iOS"
 tags: ["绘制", "Core Graphics", "CALayer"]
-author: "JJ"
+author: "myster"
 draft: false
 ---
 

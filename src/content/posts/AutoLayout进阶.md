@@ -4,7 +4,7 @@ date: "2018-05-19"
 description: "约束优先级、压缩阻力与动态布局实战。"
 category: "iOS"
 tags: ["AutoLayout", "布局", "UI"]
-author: "JJ"
+author: "myster"
 draft: false
 ---
 

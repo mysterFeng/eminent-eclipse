@@ -4,7 +4,7 @@ date: "2019-08-16"
 description: "泛型、协议、错误链路与类型擦除的实用写法。"
 category: "iOS"
 tags: ["Swift", "泛型", "协议"]
-author: "JJ"
+author: "myster"
 draft: false
 ---
 

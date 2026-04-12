@@ -5,7 +5,7 @@ date: "2026-02-06"
 category: "部署"
 categoryCustom: "部署"
 tags: ["静态网站部署"]
-author: "JJ"
+author: "myster"
 summary: "梳理 Pages 与 Workers 的差别，给出正确配置与常见错误的解决方案。"
 featured: false
 draft: false

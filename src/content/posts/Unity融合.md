@@ -4,7 +4,7 @@ description: "基于 flutter_unity_widget 的实战流程，讲清初始化、�
 date: "2023-12-07"
 category: "Flutter"
 tags: ["混合架构"]
-author: "JJ"
+author: "myster"
 summary: "从 Flutter 侧接入到 Unity 侧消息处理，给出可直接复用的代码与工程化实践。"
 featured: false
 ---

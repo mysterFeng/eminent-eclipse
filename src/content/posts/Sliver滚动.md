@@ -4,7 +4,7 @@ description: "从 Sliver 体系到缓存策略，解析 Flutter 滚动性能与�
 date: "2023-06-20"
 category: "Flutter"
 tags: ["滚动", "列表", "Sliver", "性能"]
-author: "JJ"
+author: "myster"
 summary: "深入剖析 Flutter 的滚动渲染机制，掌握 Sliver 组合、缓存与性能优化的关键策略。"
 featured: false
 ---

@@ -4,7 +4,7 @@ description: "掌握 Isolate 的运行模型、任务分流与通信设计，避
 date: "2025-01-12"
 category: "Flutter"
 tags: ["并发", "Isolate", "性能", "架构"]
-author: "JJ"
+author: "myster"
 summary: "系统梳理 Flutter Isolate 的工作机制、通信模式与常见坑点，给出可直接套用的并发设计策略。"
 featured: false
 ---

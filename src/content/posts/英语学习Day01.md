@@ -6,7 +6,7 @@ summary: "目标 30 天能独立读懂英文技术文档。第一天打地基：
 category: "学习笔记"
 categoryCustom: "学习笔记"
 tags: ["英语", "技术英语", "学习计划"]
-author: "JJ"
+author: "myster"
 draft: false
 ---
 

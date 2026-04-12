@@ -4,7 +4,7 @@ description: "基于 flutter_inappwebview 的 WebView 组件封装与安全配�
 date: "2025-02-11"
 category: "Flutter"
 tags: ["组件"]
-author: "JJ"
+author: "myster"
 summary: "给出可复用的 WebView 封装：加载状态、导航拦截、JS 交互与平台配置。"
 featured: false
 ---

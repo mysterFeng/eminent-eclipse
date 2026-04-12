@@ -4,7 +4,7 @@ date: "2020-04-14"
 description: "MVVM 结构、输入校验与网络登录完整流程。"
 category: "iOS"
 tags: ["RxSwift", "Moya", "MVVM", "登录"]
-author: "JJ"
+author: "myster"
 draft: false
 ---
 

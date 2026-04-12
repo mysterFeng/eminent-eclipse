@@ -4,7 +4,7 @@ description: "从工程视角梳理 Flutter 即时通信集成的关键点，覆
 date: "2022-04-29"
 category: "Flutter"
 tags: ["组件"]
-author: "JJ"
+author: "myster"
 summary: "IM 集成的核心不是 SDK 接入，而是初始化顺序、连接状态管理与问题可观测。"
 featured: false
 ---

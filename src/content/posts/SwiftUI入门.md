@@ -4,7 +4,7 @@ date: "2021-03-02"
 description: "核心状态管理、列表与 UIKit 混用。"
 category: "iOS"
 tags: ["SwiftUI", "状态", "UI"]
-author: "JJ"
+author: "myster"
 draft: false
 ---
 
